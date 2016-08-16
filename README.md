@@ -1,7 +1,7 @@
 # mruby-libstem-gamepad
 
 ## Instructions
-You must link against libstem_gamepad manually, including any depedencies it may require for your particular platform
+You must link against [libstem_gamepad](https://github.com/ThemsAllTook/libstem_gamepad) manually, including any depedencies it may require for your particular platform
 
 ## Usage
 ```ruby
