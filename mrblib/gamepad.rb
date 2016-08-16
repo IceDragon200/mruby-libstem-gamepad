@@ -11,6 +11,11 @@ module Libstem
     def self.count
       num_devices
     end
+
+    def self.poll_events
+      process_events
+    end
+
     class << self
       alias :shutdown_wo_clearing_cache :shutdown
       def shutdown
