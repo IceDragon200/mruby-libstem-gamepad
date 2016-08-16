@@ -232,6 +232,9 @@ get_handler_block(mrb_state* mrb, mrb_value self)
   return obj;
 }
 
+/**
+ * @yieldparam [Libstem::Gamepad] device
+ */
 static mrb_value
 gamepad_m_set_device_attach_func(mrb_state* mrb, mrb_value self)
 {
@@ -245,6 +248,9 @@ gamepad_m_set_device_attach_func(mrb_state* mrb, mrb_value self)
   return self;
 }
 
+/**
+ * @yieldparam [Libstem::Gamepad] device
+ */
 static mrb_value
 gamepad_m_set_device_remove_func(mrb_state* mrb, mrb_value self)
 {
@@ -258,6 +264,11 @@ gamepad_m_set_device_remove_func(mrb_state* mrb, mrb_value self)
   return self;
 }
 
+/**
+ * @yieldparam [Libstem::Gamepad] device
+ * @yieldparam [Integer] button_id
+ * @yieldparam [Float] timestamp
+ */
 static mrb_value
 gamepad_m_set_button_down_func(mrb_state* mrb, mrb_value self)
 {
@@ -271,6 +282,11 @@ gamepad_m_set_button_down_func(mrb_state* mrb, mrb_value self)
   return self;
 }
 
+/**
+ * @yieldparam [Libstem::Gamepad] device
+ * @yieldparam [Integer] button_id
+ * @yieldparam [Float] timestamp
+ */
 static mrb_value
 gamepad_m_set_button_up_func(mrb_state* mrb, mrb_value self)
 {
@@ -284,6 +300,13 @@ gamepad_m_set_button_up_func(mrb_state* mrb, mrb_value self)
   return self;
 }
 
+/**
+ * @yieldparam [Libstem::Gamepad] device
+ * @yieldparam [Integer] axis_id
+ * @yieldparam [Float] value
+ * @yieldparam [Float] last_value
+ * @yieldparam [Float] timestamp
+ */
 static mrb_value
 gamepad_m_set_axis_move_func(mrb_state* mrb, mrb_value self)
 {
@@ -297,42 +320,63 @@ gamepad_m_set_axis_move_func(mrb_state* mrb, mrb_value self)
   return self;
 }
 
+/**
+ * @return [Integer] device_id
+ */
 static mrb_value
 gamepad_get_device_id(mrb_state* mrb, mrb_value self)
 {
   return mrb_fixnum_value(gamepad_get_ptr(mrb, self)->deviceID);
 }
 
+/**
+ * @return [String] description
+ */
 static mrb_value
 gamepad_get_description(mrb_state* mrb, mrb_value self)
 {
   return mrb_str_new_cstr(mrb, gamepad_get_ptr(mrb, self)->description);
 }
 
+/**
+ * @return [Integer] vendor_id
+ */
 static mrb_value
 gamepad_get_vendor_id(mrb_state* mrb, mrb_value self)
 {
   return mrb_fixnum_value(gamepad_get_ptr(mrb, self)->vendorID);
 }
 
+/**
+ * @return [Integer] product_id
+ */
 static mrb_value
 gamepad_get_product_id(mrb_state* mrb, mrb_value self)
 {
   return mrb_fixnum_value(gamepad_get_ptr(mrb, self)->productID);
 }
 
+/**
+ * @return [Integer] axes
+ */
 static mrb_value
 gamepad_get_num_axes(mrb_state* mrb, mrb_value self)
 {
   return mrb_fixnum_value(gamepad_get_ptr(mrb, self)->numAxes);
 }
 
+/**
+ * @return [Integer] buttons
+ */
 static mrb_value
 gamepad_get_num_buttons(mrb_state* mrb, mrb_value self)
 {
   return mrb_fixnum_value(gamepad_get_ptr(mrb, self)->numButtons);
 }
 
+/**
+ * @return [Array<Float>] states
+ */
 static mrb_value
 gamepad_get_axis_states(mrb_state* mrb, mrb_value self)
 {
@@ -344,6 +388,9 @@ gamepad_get_axis_states(mrb_state* mrb, mrb_value self)
   return ary;
 }
 
+/**
+ * @return [Array<Boolean>] states
+ */
 static mrb_value
 gamepad_get_button_states(mrb_state* mrb, mrb_value self)
 {
@@ -355,6 +402,10 @@ gamepad_get_button_states(mrb_state* mrb, mrb_value self)
   return ary;
 }
 
+/**
+ * @param [Integer] index
+ * @return [Float] state
+ */
 static mrb_value
 gamepad_get_axis_state(mrb_state* mrb, mrb_value self)
 {
@@ -369,6 +420,10 @@ gamepad_get_axis_state(mrb_state* mrb, mrb_value self)
   return mrb_float_value(mrb, device->axisStates[index]);
 }
 
+/**
+ * @param [Integer] index
+ * @return [Boolean] state
+ */
 static mrb_value
 gamepad_get_button_state(mrb_state* mrb, mrb_value self)
 {

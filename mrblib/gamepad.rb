@@ -4,14 +4,17 @@ module Libstem
       @destroyed = false
     end
 
+    # @return [Boolean] was the controller detached or removed?
     def destroyed?
       @destroyed
     end
 
+    # (see Libstem::Gamepad.num_devices)
     def self.count
       num_devices
     end
 
+    # (see Libstem::Gamepad.process_events)
     def self.poll_events
       process_events
     end
