@@ -54,13 +54,13 @@ static mrb_value
 gamepad_get_cached_devices(mrb_state* mrb)
 {
   mrb_value klass = gamepad_get_class_value(mrb);
-  mrb_sym varname = mrb_intern_cstr(mrb, "__cached_devices");
-  mrb_value v = mrb_iv_get(mrb, klass, varname);
-  if (mrb_nil_p(v)) {
-    mrb_value h = mrb_hash_new(mrb);
-    mrb_iv_set(mrb, klass, varname, h);
+  mrb_sym varname = mrb_intern_cstr(mrb, "@__cached_devices");
+  mrb_value hash = mrb_iv_get(mrb, klass, varname);
+  if (mrb_nil_p(hash)) {
+    hash = mrb_hash_new(mrb);
+    mrb_iv_set(mrb, klass, varname, hash);
   }
-  return v;
+  return hash;
 }
 
 static mrb_value
@@ -96,9 +96,6 @@ gamepad_destroy_cached_device(mrb_state* mrb, struct Gamepad_device* device)
     mrb_value key = mrb_fixnum_value(device->deviceID);
     mrb_value hash = gamepad_get_cached_devices(mrb);
     mrb_value mdev = mrb_hash_delete_key(mrb, hash, key);
-    if (!mrb_nil_p(mdev)) {
-      mrb_iv_set(mrb, mdev, mrb_intern_lit(mrb, "@destroyed"), mrb_true_value());
-    }
     return mdev;
   }
   return mrb_nil_value();
@@ -174,10 +171,12 @@ gamepad_device_remove_func_handler(struct Gamepad_device* device, void* context)
 {
   mrb_state* mrb = (mrb_state*)context;
   mrb_value blk = gamepad_get_mruby_callback(mrb, "cb_device_remove_func");
-  mrb_value argv[] = {
-    gamepad_destroy_cached_device(mrb, device)
-  };
+  mrb_value mdev = gamepad_destroy_cached_device(mrb, device);
+  mrb_value argv[] = { mdev };
   mrb_yield_argv(mrb, blk, 1, argv);
+  if (!mrb_nil_p(mdev)) {
+    mrb_iv_set(mrb, mdev, mrb_intern_lit(mrb, "@destroyed"), mrb_true_value());
+  }
 }
 
 static void
@@ -388,6 +387,7 @@ void
 mrb_libstem_gamepad_gamepad_init(mrb_state* mrb, struct RClass* mod)
 {
   struct RClass* gamepad_cls = mrb_define_class_under(mrb, mod, "Gamepad", mrb->object_class);
+  MRB_SET_INSTANCE_TT(gamepad_cls, MRB_TT_DATA);
   mrb_define_class_under(mrb, mod, "GamepadError", mrb->eStandardError_class);
   mrb_define_class_method(mrb, gamepad_cls, "clear_device_cache",     gamepad_m_clear_device_cache,     MRB_ARGS_NONE());
   mrb_define_class_method(mrb, gamepad_cls, "init",                   gamepad_m_init,                   MRB_ARGS_NONE());
